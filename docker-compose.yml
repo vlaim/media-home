@@ -1,15 +1,13 @@
-version: "3.9"
-
 services:
   qbittorrent:
+    platform: linux/arm64/v8
     image: lscr.io/linuxserver/qbittorrent:latest
     container_name: qbittorrent
     restart: unless-stopped
-    network_mode: bridge
     environment:
-      PUID: ${PUID}          
-      PGID: ${PGID}          
-      TZ: ${TZ}              
+      PUID: ${PUID}
+      PGID: ${PGID}
+      TZ: ${TZ}
       WEBUI_PORT: 8080
     volumes:
       - ./qbittorrent:/config
@@ -21,10 +19,10 @@ services:
       - "${QBITTORRENT_WEBUI_PORT}:8080"
 
   jellyfin:
+    platform: linux/arm64/v8
     image: lscr.io/linuxserver/jellyfin:latest
     container_name: jellyfin
     restart: unless-stopped
-    network_mode: bridge
     environment:
       PUID: ${PUID}
       PGID: ${PGID}
@@ -33,11 +31,7 @@ services:
       - ./jellyfin:/config
       - /mnt/hdd/media:/media:ro
     ports:
-      - "${JELLYFIN_WEBUI_PORT}:8096"      # веб-интерфейс Jellyfin (HTTP)
-      # - "8920:8920"                      # (опц.) HTTPS, если настроишь сертификаты
+      - "${JELLYFIN_WEBUI_PORT}:8096"
+    # For HW accel later on Pi 4/5:
     # devices:
     #   - /dev/dri:/dev/dri
-
-# networks:
-#   default:
-#     driver: bridge
